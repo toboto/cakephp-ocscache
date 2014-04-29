@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- PHP5
+- PHP5 (with Memcached module and SASL support)
 - CakePHP = 1.3
 
 ## Installation
@@ -25,6 +25,13 @@
 	  'username' => 'your_instance', 
 	  'password' => 'password'
 	));
+
+## Reference
+PHP5 and Memcached module with SASL support: https://drupal.org/node/2063811
+
+For Chinese developer, the references of Memcached with SASL are:
+- CentOS: http://help.aliyun.com/view/11108324_13444498.html?spm=5176.7225337.1997284509.3.335dUr 
+- Ubuntu: http://bbs.aliyun.com/read/150127.html?spm=5176.7114037.1996646101.13.hLUJwA
 
 ## Author
 Murray Wang (toboto) http://weibo.com/tobotorui
