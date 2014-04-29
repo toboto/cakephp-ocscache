@@ -2,7 +2,7 @@
 /**
  * A CakePHP cache engine for Aliyun OCS(Open Cache Service) support.
  *
- * This cache engine is compatible with CakePHP 1.3.
+ * This cache engine is compatible with CakePHP 2.4.
  * The PHP client must be configured with Memcached module with SASL support.
  * 
  * Orignal implementation by toboto(Murray Wang) https://github.com/toboto
@@ -14,15 +14,17 @@
  *    Ubuntu: http://bbs.aliyun.com/read/150127.html?spm=5176.7114037.1996646101.13.hLUJwA
  * 
  * Installation for CakePHP 1.3:
- *   cd your_cake_app/app/plugins
- *   git clone git://github.com/toboto/cakephp-ocscache.git ocs 
+ *   cd your_cake_app/app/Plugin
+ *   git clone git://github.com/toboto/cakephp-ocscache.git Ocs 
  *
- * Configuration sample in config/core.php:
+ * Configuration sample in Config/bootstrap.php:
+ *   CakePlugin::load('Ocs');
+ *
  *   Cache::config('default', array(
  *     'engine' => 'Ocs.Ocs',
  *     'duration' => 3600,
  *     'probability' => 0, // [deprecated] The cache will not flush in this engine.
- *     'prefix' => Inflector::slug(APP_DIR) . '_', //[optional]  prefix every cache file with this string
+ *     'prefix' => 'myapp_ocscache_'
  *     'servers' => array(
  *       array('your_instance.m.cnqdalicm9pub001.ocs.aliyuncs.com', 11211)
  *       // The engine supports only one OCS instance because of the limit in OCS authentication.
@@ -81,12 +83,12 @@ class OcsEngine extends CacheEngine {
       }
     }
 
-		parent::init(array_merge(array(
+    $settings += array(
 			'engine'=> 'Memcached', 
 			'prefix' => Inflector::slug(APP_DIR) . '_', 
 			'servers' => array(array('127.0.0.1', 11211, 100)),
-			), $settings)
-		);
+    );
+    parent::init($settings);
 		if (!isset($this->__Memcached)) {
 			$rt = false;
 			$this->__Memcached =& new Memcached();
@@ -139,7 +141,7 @@ class OcsEngine extends CacheEngine {
    * @see http://php.net/manual/en/memcached.set.php
    * @access public
    */
-	function write($key, &$value, $duration) {
+	function write($key, $value, $duration) {
 		if ($duration > 30 * DAY) {
 			$duration = 0;
 		}
@@ -200,7 +202,7 @@ class OcsEngine extends CacheEngine {
    * @return boolean True if the cache was succesfully cleared, false otherwise
    * @access public
    */
-	function clear() {
+	function clear($check) {
 		return $this->__Memcached->flush();
 	}
 };
